@@ -62,8 +62,9 @@ Rules
 | b15 | b3  | b7  | b11 |
 
 ### Mix columns
-$$
-\begin{bmatrix}
+
+
+<!-- $\begin{bmatrix}
     c_{0}\\
     c_{1}\\
     c_{2}\\
@@ -82,8 +83,9 @@ $$
     c_{1}\\
     c_{2}\\
     c_{3}\\
-\end{bmatrix}
-$$
+\end{bmatrix}$ --> 
+
+<img style="transform: translateY(0.1em); background: white;" src="images/oylSsyClrV.svg">
 
 
 ### Add round key
