@@ -1,0 +1,20 @@
+# os files
+.DS_Store
+
+# Compiled Object files, Static and Dynamic libs (Shared Objects)
+*.o
+*.a
+*.so
+
+# Folders
+svg
+
+# Architecture specific extensions/prefixes
+*.exe
+*.test
+*.prof
+*.pprof
+*.out
+*.log
+
+/bin
