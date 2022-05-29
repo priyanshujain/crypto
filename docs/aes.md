@@ -16,7 +16,7 @@ Each block of plaintext is 128 bit and can be represented into a table.
 
 Plaintext -> XOR ->
 
-[ substitube bytes --> shift rows --> mix columns --> add round key ] // round
+[ substitute bytes --> shift rows --> mix columns --> add round key ] // round
 
 ### rounds
 
@@ -95,20 +95,20 @@ it's again another XOR with the round key
 
 ## AES modes 
 
-- ECB(electronic codebook): Each block of plaintext is encrypted independently using the same key. 
+- ECB(electronic code book): Each block of plaintext is encrypted independently using the same key. 
 ![ECB](images/ECB_encryption.png)
 
 
-- CBC(cipher block chaining): The input to the block cipher is the XOR of the next block of plaintext nd the preceeding block. 
+- CBC(cipher block chaining): The input to the block cipher is the XOR of the next block of plaintext nd the preceding block. 
 ![CBC](images/CBC_encryption.png)
 
 NOTE: Input to the first block is the value called `Initialization Vector or IV`. IV should be random and non-repeating by nature. IV is used to make sure that different cipher values are produced for the same first block of plaintext. 
 
-- CFB(cipher feedback): Input is produced s bits at a time. Preceeding ciphertext is used as input to the encryption algorithm to produce pseudorandom output, which is XORed with plaintext to produce next unit of ciphertext. 
+- CFB(cipher feedback): Input is produced s bits at a time. Preceding ciphertext is used as input to the encryption algorithm to produce pseudorandom output, which is XORed with plaintext to produce next unit of ciphertext. 
 
 ![CFB](images/CFB_encryption.png)
 
-- CTR (Counter): Each block of plaintext is XORed with an encrypted counter(nounce + 1). The counder is incremented for each subsequent block.
+- CTR (Counter): Each block of plaintext is XORed with an encrypted counter(nounce + 1). The counter is incremented for each subsequent block.
 ![CTR](images/CTR_encryption.png)
 
 - GCM (galois counter): TBD

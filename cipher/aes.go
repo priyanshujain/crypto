@@ -82,7 +82,7 @@ func trimPadding(src []byte, padding string) (padText []byte, err error) {
 	case "PKCS5":
 		padText, err = pkcs5Unpad(src, aes.BlockSize)
 	case "PKCS7":
-		padText, err = pkcs5Unpad(src, aes.BlockSize)
+		padText, err = pkcs7Unpad(src, aes.BlockSize)
 	default:
 		return nil, errors.New("unsupported padding algorithm")
 	}
