@@ -7,8 +7,8 @@ package cipher
 import (
 	"crypto/aes"
 	"crypto/cipher"
+	"encoding/base64"
 	"errors"
-	"strings"
 )
 
 type Aes struct {
@@ -18,8 +18,14 @@ type Aes struct {
 	padding string
 }
 
-// error when cipher size is less than block size of AES
-var ErrShortBlock = errors.New("cipher text too short")
+// Errors
+var (
+	// ErrShortBlock indicates when cipher size is less than block size of AES
+	ErrShortBlock = errors.New("cipher text too short")
+
+	// ErrUnsupportedMode indicates when mode is not supported
+	ErrUnsupportedMode = errors.New("unsupported aes mode")
+)
 
 func (x *Aes) cfbEncrypt(block cipher.Block, src, dst []byte) error {
 	stream := cipher.NewCFBEncrypter(block, x.iv)
@@ -57,48 +63,14 @@ func (x *Aes) ctrDecrypt(block cipher.Block, src, dst []byte) error {
 	return nil
 }
 
-// padding algorithms
-// PKCS5, PKCS7, ANSIX923, ISO10126
-func applyPadding(src []byte, padding string) (padText []byte, err error) {
-	padding = strings.ToUpper(padding)
-	switch padding {
-	case "PKCS5":
-		padText, err = pkcs5Pad(src, aes.BlockSize)
-	case "PKCS7":
-		padText, err = pkcs7Pad(src, aes.BlockSize)
-	default:
-		return nil, errors.New("unsupported padding algorithm")
-	}
-	if err != nil {
-		return nil, err
-	}
-	return padText, nil
-}
-
-// remove extra padding from decrypted text
-func trimPadding(src []byte, padding string) (padText []byte, err error) {
-	padding = strings.ToUpper(padding)
-	switch padding {
-	case "PKCS5":
-		padText, err = pkcs5Unpad(src, aes.BlockSize)
-	case "PKCS7":
-		padText, err = pkcs7Unpad(src, aes.BlockSize)
-	default:
-		return nil, errors.New("unsupported padding algorithm")
-	}
-	if err != nil {
-		return nil, err
-	}
-	return padText, nil
-}
-
+// encrypts bytes array into bytes array
 func (x *Aes) Encrypt(src []byte) ([]byte, error) {
 	block, err := aes.NewCipher(x.key)
 	if err != nil {
 		return nil, err
 	}
 	if x.padding != "" {
-		src, err = applyPadding(src, x.padding)
+		src, err = AddPadding(src, x.padding)
 		if err != nil {
 			return nil, err
 		}
@@ -111,10 +83,13 @@ func (x *Aes) Encrypt(src []byte) ([]byte, error) {
 		x.ctrEncrypt(block, src, dst)
 	case "CBC":
 		x.cbcEncrypt(block, src, dst)
+	default:
+		return nil, ErrUnsupportedMode
 	}
 	return dst, nil
 }
 
+// decrypts bytes array into bytes array
 func (x *Aes) Decrypt(src []byte) ([]byte, error) {
 	block, err := aes.NewCipher(x.key)
 	if err != nil {
@@ -131,13 +106,37 @@ func (x *Aes) Decrypt(src []byte) ([]byte, error) {
 		x.ctrDecrypt(block, src, dst)
 	case "CBC":
 		x.cbcDecrypt(block, src, dst)
+	default:
+		return nil, ErrUnsupportedMode
 	}
 
 	if x.padding != "" {
-		dst, err = trimPadding(dst, x.padding)
+		dst, err = TrimPadding(dst, x.padding)
 		if err != nil {
 			return nil, err
 		}
 	}
 	return dst, nil
+}
+
+// AES encryption with string input and output in base64
+func (x *Aes) EncryptBase64(src string) (string, error) {
+	dst, err := x.Encrypt([]byte(src))
+	if err != nil {
+		return "", err
+	}
+	return base64.StdEncoding.EncodeToString(dst), nil
+}
+
+// AES decryption with input in base64 and string output
+func (x *Aes) DecryptBase64(src string) (string, error) {
+	dst, err := base64.StdEncoding.DecodeString(src)
+	if err != nil {
+		return "", err
+	}
+	dst, err = x.Decrypt(dst)
+	if err != nil {
+		return "", err
+	}
+	return string(dst), nil
 }

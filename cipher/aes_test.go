@@ -61,7 +61,7 @@ func TestAesCipher(t *testing.T) {
 		key:     key,
 		iv:      iv,
 		mode:    "CBC",
-		padding: "pkcs5"}
+		padding: "pkcs7"}
 	ciphertext, err := aes.Encrypt(plaintext)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
@@ -83,7 +83,7 @@ func ExampleAesEncrypt() {
 		key:     key,
 		iv:      iv,
 		mode:    "CBC",
-		padding: "pkcs5"}
+		padding: "pkcs7"}
 	ciphertext, err := aes.Encrypt(plaintext)
 	if err != nil {
 		panic(err)
