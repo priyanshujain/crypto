@@ -2,7 +2,6 @@
 package signature
 
 import (
-	"crypto"
 	"crypto/rand"
 	"crypto/rsa"
 	"errors"
@@ -15,8 +14,8 @@ type RsaScheme uint
 
 // Rsa schemes
 const (
-	PKCS1 RsaScheme = 1 + iota // import crypto/md5
-	PSS                        // import crypto/sha1
+	PKCS1 RsaScheme = 1 + iota // https://en.wikipedia.org/wiki/PKCS_1
+	PSS                        // https://en.wikipedia.org/wiki/Probabilistic_signature_scheme
 )
 
 // errors
@@ -31,21 +30,9 @@ type Rsa struct {
 	hash       hash.HashType
 }
 
-// get standard crypto hash value from hash type like crypto.SHA1 from SHA1
-func getStdCryptoHash(htype hash.HashType) (crypto.Hash, error) {
-	switch htype {
-	case hash.SHA1:
-		return crypto.SHA1, nil
-	case hash.SHA256:
-		return crypto.SHA256, nil
-	default:
-		return 0, hash.ErrInvalidHashType
-	}
-}
-
 // sign hashed data using private key
 func (x *Rsa) Sign(hashed []byte) ([]byte, error) {
-	stdHash, err := getStdCryptoHash(x.hash)
+	stdHash, err := hash.GetStdCryptoHash(x.hash)
 	if err != nil {
 		return nil, err
 	}
@@ -61,7 +48,7 @@ func (x *Rsa) Sign(hashed []byte) ([]byte, error) {
 
 // verify hashed data using public key
 func (x *Rsa) VerifySignature(hashed []byte, signature []byte) error {
-	stdHash, err := getStdCryptoHash(x.hash)
+	stdHash, err := hash.GetStdCryptoHash(x.hash)
 	if err != nil {
 		return err
 	}

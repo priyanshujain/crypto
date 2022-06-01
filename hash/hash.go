@@ -3,6 +3,7 @@
 package hash
 
 import (
+	"crypto"
 	"crypto/sha1"
 	"crypto/sha256"
 	"encoding/base64"
@@ -23,6 +24,18 @@ const (
 var (
 	ErrInvalidHashType = errors.New("invalid hash type")
 )
+
+// get standard crypto hash value from hash type like crypto.SHA1 from SHA1
+func GetStdCryptoHash(htype HashType) (crypto.Hash, error) {
+	switch htype {
+	case SHA1:
+		return crypto.SHA1, nil
+	case SHA256:
+		return crypto.SHA256, nil
+	default:
+		return 0, ErrInvalidHashType
+	}
+}
 
 // Hash hashes data using a given hash algorithm
 func Hash(htype HashType, src []byte) ([]byte, error) {
