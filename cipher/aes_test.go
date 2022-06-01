@@ -8,21 +8,23 @@ import (
 )
 
 var aesTestCases = []struct {
+	name    string
 	key     []byte
 	iv      []byte
 	data    []byte
-	mode    string
-	padding string
+	mode    AesBlockMode
+	padding AesPaddingScheme
 	output  []byte
 }{
 	// Tests from NIST SP 800-38A pp 27-29
 	// https://cs.opensource.google/go/go/+/refs/tags/go1.18.2:src/crypto/cipher/cbc_aes_test.go
 	{
+		name:    "AES-128-CFB",
 		key:     []byte{160, 153, 156, 74, 55, 224, 78, 74, 56, 176, 207, 163, 173, 44, 109, 211},
 		iv:      []byte{51, 49, 52, 50, 49, 52, 52, 49, 52, 56, 55, 50, 53, 49, 48, 57},
 		data:    []byte("Sample message for keylen<blocklen"),
-		mode:    "CBC",
-		padding: "pkcs7",
+		mode:    CBC,
+		padding: PKCS7,
 		output: []byte{
 			113, 137, 144, 149, 72, 185, 22, 143, 22, 216, 5, 84, 140, 145,
 			204, 97, 177, 231, 216, 49, 14, 193, 55, 253, 200, 60, 40, 165,
@@ -34,7 +36,7 @@ var aesTestCases = []struct {
 
 func TestAesEncrypt(t *testing.T) {
 	for _, test := range aesTestCases {
-		t.Run(fmt.Sprintf("%s-%s", test.mode, test.padding), func(t *testing.T) {
+		t.Run(fmt.Sprintf("Test: %s", test.name), func(t *testing.T) {
 			aes := Aes{
 				key:     test.key,
 				iv:      test.iv,
@@ -60,8 +62,8 @@ func TestAesCipher(t *testing.T) {
 	aes := Aes{
 		key:     key,
 		iv:      iv,
-		mode:    "CBC",
-		padding: "pkcs7"}
+		mode:    CBC,
+		padding: PKCS7}
 	ciphertext, err := aes.Encrypt(plaintext)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
@@ -82,8 +84,8 @@ func ExampleAesEncrypt() {
 	aes := Aes{
 		key:     key,
 		iv:      iv,
-		mode:    "CBC",
-		padding: "pkcs7"}
+		mode:    CBC,
+		padding: PKCS7}
 	ciphertext, err := aes.Encrypt(plaintext)
 	if err != nil {
 		panic(err)

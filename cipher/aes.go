@@ -11,11 +11,28 @@ import (
 	"errors"
 )
 
+// Aes Block cipher mode of operation
+type AesBlockMode uint
+
+const (
+	CFB AesBlockMode = 1 + iota // https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Cipher_feedback_(CFB)
+	CTR                         // https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_(CTR)
+	CBC                         // https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Cipher_block_chaining_(CBC)
+)
+
+// supported padding schemes
+type AesPaddingScheme uint
+
+const (
+	PKCS5 AesPaddingScheme = 1 + iota // https://en.wikipedia.org/wiki/Padding_(cryptography)#PKCS#5_and_PKCS#7
+	PKCS7
+)
+
 type Aes struct {
 	key     []byte
 	iv      []byte
-	mode    string
-	padding string
+	mode    AesBlockMode
+	padding AesPaddingScheme
 }
 
 // Errors
@@ -69,7 +86,7 @@ func (x *Aes) Encrypt(src []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	if x.padding != "" {
+	if x.padding != 0 {
 		src, err = AddPadding(src, x.padding)
 		if err != nil {
 			return nil, err
@@ -77,11 +94,11 @@ func (x *Aes) Encrypt(src []byte) ([]byte, error) {
 	}
 	dst := make([]byte, len(src))
 	switch x.mode {
-	case "CFB":
+	case CFB:
 		x.cfbEncrypt(block, src, dst)
-	case "CTR":
+	case CTR:
 		x.ctrEncrypt(block, src, dst)
-	case "CBC":
+	case CBC:
 		x.cbcEncrypt(block, src, dst)
 	default:
 		return nil, ErrUnsupportedMode
@@ -100,17 +117,17 @@ func (x *Aes) Decrypt(src []byte) ([]byte, error) {
 	}
 	dst := make([]byte, len(src))
 	switch x.mode {
-	case "CFB":
+	case CFB:
 		x.cfbDecrypt(block, src, dst)
-	case "CTR":
+	case CTR:
 		x.ctrDecrypt(block, src, dst)
-	case "CBC":
+	case CBC:
 		x.cbcDecrypt(block, src, dst)
 	default:
 		return nil, ErrUnsupportedMode
 	}
 
-	if x.padding != "" {
+	if x.padding != 0 {
 		dst, err = TrimPadding(dst, x.padding)
 		if err != nil {
 			return nil, err

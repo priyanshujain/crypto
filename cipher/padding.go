@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"crypto/aes"
 	"errors"
-	"strings"
 )
 
 // Most modern cryptographic hash functions process messages in fixed-length blocks;
@@ -108,12 +107,11 @@ func PkCS7UnPadding(src []byte, blockSize int) ([]byte, error) {
 
 // padding algorithms
 // supported: PKCS5, PKCS7
-func AddPadding(src []byte, padding string) (padText []byte, err error) {
-	padding = strings.ToUpper(padding)
+func AddPadding(src []byte, padding AesPaddingScheme) (padText []byte, err error) {
 	switch padding {
-	case "PKCS5":
+	case PKCS5:
 		padText, err = PkCS5Padding(src, aes.BlockSize)
-	case "PKCS7":
+	case PKCS7:
 		padText, err = PkCS7Padding(src, aes.BlockSize)
 	default:
 		return nil, ErrUnsupportedPadding
@@ -125,12 +123,11 @@ func AddPadding(src []byte, padding string) (padText []byte, err error) {
 }
 
 // Remove extra padding from decrypted text
-func TrimPadding(src []byte, padding string) (padText []byte, err error) {
-	padding = strings.ToUpper(padding)
+func TrimPadding(src []byte, padding AesPaddingScheme) (padText []byte, err error) {
 	switch padding {
-	case "PKCS5":
+	case PKCS5:
 		padText, err = PkCS5UnPadding(src, aes.BlockSize)
-	case "PKCS7":
+	case PKCS7:
 		padText, err = PkCS7UnPadding(src, aes.BlockSize)
 	default:
 		return nil, ErrUnsupportedPadding
