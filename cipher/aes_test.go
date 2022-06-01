@@ -2,7 +2,6 @@ package cipher
 
 import (
 	"bytes"
-	"encoding/base64"
 	"fmt"
 	"testing"
 )
@@ -77,21 +76,22 @@ func TestAesCipher(t *testing.T) {
 	}
 }
 
-func ExampleAesEncrypt() {
+func TestAesEncryptBase64(t *testing.T) {
 	key := []byte{160, 153, 156, 74, 55, 224, 78, 74, 56, 176, 207, 163, 173, 44, 109, 211}
 	iv := []byte{51, 49, 52, 50, 49, 52, 52, 49, 52, 56, 55, 50, 53, 49, 48, 57}
-	plaintext := []byte("{\"name\":\"test\"}")
+	output := "1sNzHc+KAq7EyRM/yXw4NA=="
+	plaintext := "{\"name\":\"test\"}"
 	aes := Aes{
 		key:     key,
 		iv:      iv,
 		mode:    CBC,
 		padding: PKCS7}
-	ciphertext, err := aes.Encrypt(plaintext)
+	ciphertext, err := aes.EncryptBase64(plaintext)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(base64.StdEncoding.EncodeToString(ciphertext))
 
-	// Output:
-	// 1sNzHc+KAq7EyRM/yXw4NA==
+	if output != ciphertext {
+		t.Errorf("got %q, wanted %q", ciphertext, output)
+	}
 }
