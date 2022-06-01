@@ -15,8 +15,8 @@ type HashType uint
 
 // types of supported hashing algorithms
 const (
-	SHA1 HashType = 1 + iota
-	SHA256
+	SHA1   HashType = 1 + iota // http://en.wikipedia.org/wiki/SHA-1
+	SHA256                     // https://en.wikipedia.org/wiki/SHA-2
 )
 
 // errors

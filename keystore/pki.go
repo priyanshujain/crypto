@@ -1,6 +1,6 @@
 // keys imports or create keys for public key infrastructure
 // it by default uses pem format for all keys
-package signature
+package keystore
 
 import (
 	"crypto/rand"

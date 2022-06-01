@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/priyanshujain/crypto/hash"
+	"github.com/priyanshujain/crypto/keystore"
 )
 
 var privateKeyPem = `-----BEGIN RSA PRIVATE KEY-----
@@ -67,7 +68,7 @@ var rsaSignatureTestCases = []struct {
 }
 
 func TestPKCS1RsaSignature(t *testing.T) {
-	rsaPrivateKey, _ := ParsePrivateKeyFromPem([]byte(privateKeyPem))
+	rsaPrivateKey, _ := keystore.ParsePrivateKeyFromPem([]byte(privateKeyPem))
 	for _, test := range rsaSignatureTestCases {
 		if test.scheme != PKCS1 {
 			continue
@@ -96,7 +97,7 @@ func TestPKCS1RsaSignature(t *testing.T) {
 }
 
 func TestPSSRsaSignature(t *testing.T) {
-	rsaPrivateKey, _ := ParsePrivateKeyFromPem([]byte(privateKeyPem))
+	rsaPrivateKey, _ := keystore.ParsePrivateKeyFromPem([]byte(privateKeyPem))
 	for _, test := range rsaSignatureTestCases {
 		if test.scheme != PSS {
 			continue

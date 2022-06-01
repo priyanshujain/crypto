@@ -8,6 +8,7 @@ import (
 	"errors"
 
 	"github.com/priyanshujain/crypto/hash"
+	"github.com/priyanshujain/crypto/keystore"
 )
 
 type RsaScheme uint
@@ -24,8 +25,8 @@ var (
 )
 
 type Rsa struct {
-	privateKey *PrivateKey
-	publicKey  *PublicKey
+	privateKey *keystore.PrivateKey
+	publicKey  *keystore.PublicKey
 	scheme     RsaScheme
 	hash       hash.HashType
 }
