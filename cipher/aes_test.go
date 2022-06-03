@@ -71,7 +71,7 @@ func TestAesCipher(t *testing.T) {
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
-	if string(result) != string(plaintext) {
+	if !bytes.Equal(result, plaintext) {
 		t.Errorf("got %q, wanted %q", string(result), string(plaintext))
 	}
 }

@@ -47,7 +47,7 @@ func (x *Rsa) Sign(hashed []byte) ([]byte, error) {
 }
 
 // verify hashed data using public key
-func (x *Rsa) VerifySignature(hashed []byte, signature []byte) error {
+func (x *Rsa) VerifySignature(hashed, signature []byte) error {
 	stdHash, err := hash.GetStdCryptoHash(x.hash)
 	if err != nil {
 		return err

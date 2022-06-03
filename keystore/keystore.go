@@ -9,7 +9,7 @@ import (
 // generate a variable sized byte random key using
 func GenEncryptionKey(size int) (*[]byte, error) {
 	key := make([]byte, size)
-	_, err := io.ReadFull(rand.Reader, key[:])
+	_, err := io.ReadFull(rand.Reader, key)
 	if err != nil {
 		return nil, err
 	}
