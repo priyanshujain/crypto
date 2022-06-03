@@ -4,6 +4,8 @@ simplified crypto module using go crypto library. We are not implementing any cr
 from NIST approved implementation and providing an easy interface to use them.
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/priyanshujain/crypto.svg)](https://pkg.go.dev/github.com/priyanshujain/crypto)
+[![Test Status](https://github.com/priyanshujain/crypto/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/priyanshujain/crypto/actions)
+
 
 ## Install
 
