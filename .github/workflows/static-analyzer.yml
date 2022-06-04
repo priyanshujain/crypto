@@ -1,0 +1,32 @@
+name: Static analyzer
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  semgrep:
+    name: Semgrep Scan
+    runs-on: ubuntu-latest 
+    env:
+      SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+    container:
+      image: returntocorp/semgrep
+    if: (github.actor != 'dependabot[bot]')
+    steps:
+      - uses: actions/checkout@v3
+      - run: semgrep ci
+  
+  staticcheck:
+    name: "Staticcheck Scan"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+      fetch-depth: 1
+    - uses: dominikh/staticcheck-action@v1.2.0
+      with:
+      version: "2022.1.1"
