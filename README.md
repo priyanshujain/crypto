@@ -5,7 +5,7 @@ from NIST approved implementation and providing an easy interface to use them.
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/priyanshujain/crypto.svg)](https://pkg.go.dev/github.com/priyanshujain/crypto)
 [![Test Status](https://github.com/priyanshujain/crypto/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/priyanshujain/crypto/actions)
-
+[![codecov](https://codecov.io/gh/priyanshujain/crypto/branch/master/graph/badge.svg?token=8UY0NTGGRM)](https://codecov.io/gh/priyanshujain/crypto)
 
 ## Install
 
